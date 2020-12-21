@@ -1,180 +1,88 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
-import React, { useEffect } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } from 'react-native-paper';
 import { NavigationContainer, DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
-import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } from 'react-native-paper';
-
-import { DrawerContent } from './screens/DrawerContent';
-
-import MainTabScreen from './screens/MainTabScreen';
-import ContactUsScreen from './screens/ContactUsScreen';
-import ClientScreen from './screens/ClientScreen';
-
-import { AuthContext } from './components/context';
-
-import RootStackScreen from './screens/RootStackScreen';
-
 import AsyncStorage from '@react-native-community/async-storage';
+import { DrawerContent } from './screens/DrawerContent';
 import AboutChemtronicsScreen from './screens/AboutChemtronicsScreen';
+import ClientScreen from './screens/ClientScreen';
+import ContactUsScreen from './screens/ContactUsScreen';
+import MainTabScreen from './screens/MainTabScreen';
+import SignInScreen from './screens/SignInScreen';
+import SignUpScreen from './screens/SignUpScreen';
+import SplashScreen from './screens/SplashScreen';
 
-const Drawer = createDrawerNavigator();
+class App extends React.Component {
+    customDefaultTheme = {
+        ...NavigationDefaultTheme,
+        ...PaperDefaultTheme,
+        colors: {
+            ...NavigationDefaultTheme.colors,
+            ...PaperDefaultTheme.colors,
+            background: '#ffffff',
+            text: '#333333',
+        },
+    };
 
-const App = () => {
-	// const [isLoading, setIsLoading] = React.useState(true);
-	// const [userToken, setUserToken] = React.useState(null);
+    customDarkTheme = {
+        ...NavigationDarkTheme,
+        ...PaperDarkTheme,
+        colors: {
+            ...NavigationDarkTheme.colors,
+            ...PaperDarkTheme.colors,
+            background: '#333333',
+            text: '#ffffff',
+        },
+    };
+    constructor(props) {
+        super(props);
+        this.navigationCallback = this.navigationCallback.bind(this);
+        this.toggleThemeCallback = this.toggleThemeCallback.bind(this);
 
-	const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-
-	const initialLoginState = {
-		isLoading: true,
-		userName: null,
-		userToken: null,
-	};
-
-	const CustomDefaultTheme = {
-		...NavigationDefaultTheme,
-		...PaperDefaultTheme,
-		colors: {
-			...NavigationDefaultTheme.colors,
-			...PaperDefaultTheme.colors,
-			background: '#ffffff',
-			text: '#333333',
-		},
-	};
-
-	const CustomDarkTheme = {
-		...NavigationDarkTheme,
-		...PaperDarkTheme,
-		colors: {
-			...NavigationDarkTheme.colors,
-			...PaperDarkTheme.colors,
-			background: '#333333',
-			text: '#ffffff',
-		},
-	};
-
-	const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
-
-	const loginReducer = (prevState, action) => {
-		switch (action.type) {
-			case 'RETRIEVE_TOKEN':
-				return {
-					...prevState,
-					userToken: action.token,
-					isLoading: false,
-				};
-			case 'LOGIN':
-				return {
-					...prevState,
-					userName: action.id,
-					userToken: action.token,
-					isLoading: false,
-				};
-			case 'LOGOUT':
-				return {
-					...prevState,
-					userName: null,
-					userToken: null,
-					isLoading: false,
-				};
-			case 'REGISTER':
-				return {
-					...prevState,
-					userName: action.id,
-					userToken: action.token,
-					isLoading: false,
-				};
-		}
-	};
-
-	const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
-
-	const authContext = React.useMemo(
-		() => ({
-			signIn: async (foundUser) => {
-				// setUserToken('fgkj');
-				// setIsLoading(false);
-				const userToken = String(foundUser[0].userToken);
-				const userName = foundUser[0].username;
-
-				try {
-					await AsyncStorage.setItem('userToken', userToken);
-				} catch (e) {
-					console.log(e);
-				}
-				// console.log('user token: ', userToken);
-				dispatch({ type: 'LOGIN', id: userName, token: userToken });
-			},
-			signOut: async () => {
-				// setUserToken(null);
-				// setIsLoading(false);
-				try {
-					await AsyncStorage.removeItem('userToken');
-				} catch (e) {
-					console.log(e);
-				}
-				dispatch({ type: 'LOGOUT' });
-			},
-			signUp: () => {
-				// setUserToken('fgkj');
-				// setIsLoading(false);
-			},
-			toggleTheme: () => {
-				setIsDarkTheme((isDarkTheme) => !isDarkTheme);
-			},
-		}),
-		[]
-	);
-
-	useEffect(() => {
-		setTimeout(async () => {
-			// setIsLoading(false);
-			let userToken;
-			userToken = null;
-			try {
-				userToken = await AsyncStorage.getItem('userToken');
-			} catch (e) {
-				console.log(e);
-			}
-			// console.log('user token: ', userToken);
-			dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
-		}, 1000);
-	}, []);
-
-	if (loginState.isLoading) {
-		return (
-			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-				<ActivityIndicator size="large" />
-			</View>
-		);
-	}
-	return (
-		<PaperProvider theme={theme}>
-			<AuthContext.Provider value={authContext}>
-				<NavigationContainer theme={theme}>
-					{loginState.userToken !== null ? (
-						<Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
-							<Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
-							<Drawer.Screen name="AboutChemtronicsScreen" component={AboutChemtronicsScreen} />
-							<Drawer.Screen name="ContactUsScreen" component={ContactUsScreen} />
-							<Drawer.Screen name="ClientScreen" component={ClientScreen} />
-						</Drawer.Navigator>
-					) : (
-						<RootStackScreen />
-					)}
-				</NavigationContainer>
-			</AuthContext.Provider>
-		</PaperProvider>
-	);
-};
+        this.state = {
+            goToScreen: 'Splash',
+            isDarkTheme: false,
+        };
+        this.setState({ theme: this.state.defaultTheme });
+    }
+    async navigationCallback(val) {
+        if (val === 'SignInOrHome') {
+            var isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+            isLoggedIn === 'true' ? this.setState({ goToScreen: 'Home' }) : this.setState({ goToScreen: 'SignIn' });
+        } else if (val === 'Home') {
+            await AsyncStorage.setItem('isLoggedIn', 'true');
+            this.setState({ goToScreen: val });
+        } else if (val === 'SignIn') {
+            await AsyncStorage.removeItem('isLoggedIn');
+            this.setState({ goToScreen: val });
+        } else this.setState({ goToScreen: val });
+    }
+    toggleThemeCallback() {
+        this.setState({ isDarkTheme: !this.state.isDarkTheme });
+    }
+    render() {
+        const Drawer = createDrawerNavigator();
+        return (
+            <PaperProvider theme={this.state.isDarkTheme ? this.customDarkTheme : this.customDefaultTheme}>
+                <NavigationContainer theme={this.state.isDarkTheme ? this.customDarkTheme : this.customDefaultTheme}>
+                    {this.state.goToScreen === 'Splash' ? (
+                        <SplashScreen navigationCallback={this.navigationCallback} />
+                    ) : this.state.goToScreen === 'SignIn' ? (
+                        <SignInScreen navigationCallback={this.navigationCallback} />
+                    ) : this.state.goToScreen === 'SignUp' ? (
+                        <SignUpScreen navigationCallback={this.navigationCallback} />
+                    ) : (
+                        <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} />}>
+                            <Drawer.Screen name='HomeDrawer' component={MainTabScreen} />
+                            <Drawer.Screen name='AboutChemtronicsScreen' component={AboutChemtronicsScreen} />
+                            <Drawer.Screen name='ContactUsScreen' component={ContactUsScreen} />
+                            <Drawer.Screen name='ClientScreen' component={ClientScreen} />
+                        </Drawer.Navigator>
+                    )}
+                </NavigationContainer>
+            </PaperProvider>
+        );
+    }
+}
 
 export default App;
