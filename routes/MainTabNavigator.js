@@ -5,40 +5,14 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import HomeScreen from './HomeScreen';
-import ProductListingScreen from './ProductListingScreen';
+import HomeScreen from '../screens/HomeScreen';
+import ProductListingScreen from '../screens/ProductListingScreen';
 
 const HomeStack = createStackNavigator();
 const ProductListingStack = createStackNavigator();
-
 const Tab = createMaterialBottomTabNavigator();
 
-const MainTabScreen = () => (
-    <Tab.Navigator initialRouteName='Home' activeColor='#fff' barStyle={{ backgroundColor: '#02b389' }}>
-        <Tab.Screen
-            name='Home'
-            component={HomeStackScreen}
-            options={{
-                tabBarLabel: 'Home',
-                tabBarColor: '#02b389',
-                tabBarIcon: ({ color }) => <Icon name='ios-home' color={color} size={26} />,
-            }}
-        />
-        <Tab.Screen
-            name='ProductListing'
-            component={ProductListingStackScreen}
-            options={{
-                tabBarLabel: 'Products',
-                tabBarColor: '#02b389',
-                tabBarIcon: ({ color }) => <Icon name='ios-git-compare' color={color} size={26} />,
-            }}
-        />
-    </Tab.Navigator>
-);
-
-export default MainTabScreen;
-
-const HomeStackScreen = ({ navigation }) => (
+const HomeStackNavigator = ({ navigation }) => (
     <HomeStack.Navigator
         screenOptions={{
             headerStyle: {
@@ -58,7 +32,7 @@ const HomeStackScreen = ({ navigation }) => (
     </HomeStack.Navigator>
 );
 
-const ProductListingStackScreen = ({ navigation }) => (
+const ProductListingStackNavigator = ({ navigation }) => (
     <ProductListingStack.Navigator
         screenOptions={{
             headerStyle: {
@@ -76,3 +50,28 @@ const ProductListingStackScreen = ({ navigation }) => (
         />
     </ProductListingStack.Navigator>
 );
+
+const MainTabNavigator = () => (
+    <Tab.Navigator initialRouteName='Home' activeColor='#fff' barStyle={{ backgroundColor: '#02b389' }}>
+        <Tab.Screen
+            name='Home'
+            component={HomeStackNavigator}
+            options={{
+                tabBarLabel: 'Home',
+                tabBarColor: '#02b389',
+                tabBarIcon: ({ color }) => <Icon name='ios-home' color={color} size={26} />,
+            }}
+        />
+        <Tab.Screen
+            name='ProductListing'
+            component={ProductListingStackNavigator}
+            options={{
+                tabBarLabel: 'Products',
+                tabBarColor: '#02b389',
+                tabBarIcon: ({ color }) => <Icon name='ios-git-compare' color={color} size={26} />,
+            }}
+        />
+    </Tab.Navigator>
+);
+
+export default MainTabNavigator;

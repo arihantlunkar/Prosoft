@@ -3,14 +3,14 @@ import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme, DarkTheme
 import { NavigationContainer, DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
-import { DrawerContent } from './screens/DrawerContent';
-import AboutChemtronicsScreen from './screens/AboutChemtronicsScreen';
-import ClientScreen from './screens/ClientScreen';
-import ContactUsScreen from './screens/ContactUsScreen';
-import MainTabScreen from './screens/MainTabScreen';
+import DrawerContent from './screens/DrawerContent';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
 import SplashScreen from './screens/SplashScreen';
+import AboutUsStackNavigator from './routes/AboutUsStackNavigator';
+import ContactUsStackNavigator from './routes/ContactUsStackNavigator';
+import ClientStackNavigator from './routes/ClientStackNavigator';
+import MainTabNavigator from './routes/MainTabNavigator';
 
 class App extends React.Component {
     customDefaultTheme = {
@@ -38,31 +38,34 @@ class App extends React.Component {
         super(props);
         this.navigationCallback = this.navigationCallback.bind(this);
         this.toggleThemeCallback = this.toggleThemeCallback.bind(this);
-        this.setUserDataCallback = this.setUserDataCallback.bind(this);
+        this.setUserNameCallback = this.setUserNameCallback.bind(this);
 
         this.state = {
             goToScreen: 'Splash',
             isDarkTheme: false,
-            userData: null,
+            username: null,
         };
     }
     async navigationCallback(val) {
         if (val === 'SignInOrHome') {
-            var isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
-            isLoggedIn === 'true' ? this.setState({ goToScreen: 'Home' }) : this.setState({ goToScreen: 'SignIn' });
-        } else if (val === 'Home') {
-            await AsyncStorage.setItem('isLoggedIn', 'true');
+            this.setState({ username: await AsyncStorage.getItem('username') });
+            this.setState({ isDarkTheme: (await AsyncStorage.getItem('storedTheme')) === 'Dark' ? true : false });
+            this.state.username !== null ? this.setState({ goToScreen: 'Home' }) : this.setState({ goToScreen: 'SignIn' });
+        } else if (val === 'Home' && null !== this.state.username) {
+            await AsyncStorage.setItem('username', this.state.username);
             this.setState({ goToScreen: val });
-        } else if (val === 'SignIn') {
-            await AsyncStorage.removeItem('isLoggedIn');
+        } else if (val === 'SignIn' || null === this.state.username) {
+            await AsyncStorage.removeItem('username');
+            this.setState({ username: null });
             this.setState({ goToScreen: val });
         } else this.setState({ goToScreen: val });
     }
-    toggleThemeCallback() {
+    async toggleThemeCallback() {
+        await AsyncStorage.setItem('storedTheme', !this.state.isDarkTheme ? 'Dark' : 'Default');
         this.setState({ isDarkTheme: !this.state.isDarkTheme });
     }
-    setUserDataCallback(data) {
-        this.setState({ userData: data });
+    setUserNameCallback(val) {
+        this.setState({ username: val });
     }
     render() {
         const Drawer = createDrawerNavigator();
@@ -73,18 +76,18 @@ class App extends React.Component {
                         <SplashScreen navigationCallback={this.navigationCallback} />
                     ) : this.state.goToScreen === 'SignUp' ? (
                         <SignUpScreen navigationCallback={this.navigationCallback} />
-                    ) : this.state.goToScreen === 'Home' && null !== this.state.userData ? (
+                    ) : this.state.goToScreen === 'Home' && null !== this.state.username ? (
                         <Drawer.Navigator
                             drawerContent={(props) => (
-                                <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} userData={this.state.userData} />
+                                <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} username={this.state.username} />
                             )}>
-                            <Drawer.Screen name='HomeDrawer' component={MainTabScreen} />
-                            <Drawer.Screen name='AboutChemtronicsScreen' component={AboutChemtronicsScreen} />
-                            <Drawer.Screen name='ContactUsScreen' component={ContactUsScreen} />
-                            <Drawer.Screen name='ClientScreen' component={ClientScreen} />
+                            <Drawer.Screen name='MainTab' component={MainTabNavigator} />
+                            <Drawer.Screen name='AboutUs' component={AboutUsStackNavigator} />
+                            <Drawer.Screen name='ContactUs' component={ContactUsStackNavigator} />
+                            <Drawer.Screen name='Client' component={ClientStackNavigator} />
                         </Drawer.Navigator>
                     ) : (
-                        <SignInScreen navigationCallback={this.navigationCallback} setUserDataCallback={this.setUserDataCallback} />
+                        <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
                     )}
                 </NavigationContainer>
             </PaperProvider>
