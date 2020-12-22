@@ -38,12 +38,13 @@ class App extends React.Component {
         super(props);
         this.navigationCallback = this.navigationCallback.bind(this);
         this.toggleThemeCallback = this.toggleThemeCallback.bind(this);
+        this.setUserDataCallback = this.setUserDataCallback.bind(this);
 
         this.state = {
             goToScreen: 'Splash',
             isDarkTheme: false,
+            userData: null,
         };
-        this.setState({ theme: this.state.defaultTheme });
     }
     async navigationCallback(val) {
         if (val === 'SignInOrHome') {
@@ -60,6 +61,9 @@ class App extends React.Component {
     toggleThemeCallback() {
         this.setState({ isDarkTheme: !this.state.isDarkTheme });
     }
+    setUserDataCallback(data) {
+        this.setState({ userData: data });
+    }
     render() {
         const Drawer = createDrawerNavigator();
         return (
@@ -67,17 +71,20 @@ class App extends React.Component {
                 <NavigationContainer theme={this.state.isDarkTheme ? this.customDarkTheme : this.customDefaultTheme}>
                     {this.state.goToScreen === 'Splash' ? (
                         <SplashScreen navigationCallback={this.navigationCallback} />
-                    ) : this.state.goToScreen === 'SignIn' ? (
-                        <SignInScreen navigationCallback={this.navigationCallback} />
                     ) : this.state.goToScreen === 'SignUp' ? (
                         <SignUpScreen navigationCallback={this.navigationCallback} />
-                    ) : (
-                        <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} />}>
+                    ) : this.state.goToScreen === 'Home' && null !== this.state.userData ? (
+                        <Drawer.Navigator
+                            drawerContent={(props) => (
+                                <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} userData={this.state.userData} />
+                            )}>
                             <Drawer.Screen name='HomeDrawer' component={MainTabScreen} />
                             <Drawer.Screen name='AboutChemtronicsScreen' component={AboutChemtronicsScreen} />
                             <Drawer.Screen name='ContactUsScreen' component={ContactUsScreen} />
                             <Drawer.Screen name='ClientScreen' component={ClientScreen} />
                         </Drawer.Navigator>
+                    ) : (
+                        <SignInScreen navigationCallback={this.navigationCallback} setUserDataCallback={this.setUserDataCallback} />
                     )}
                 </NavigationContainer>
             </PaperProvider>

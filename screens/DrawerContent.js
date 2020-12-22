@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableRipple, Text, Switch } from 'react-native';
 import { Avatar, Title, Caption, Drawer } from 'react-native-paper';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -19,8 +19,8 @@ export function DrawerContent(props) {
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>arihant.lunkar</Title>
-                                <Caption style={styles.caption}>arihant-cse15@snu.edu.in</Caption>
+                                <Title style={styles.title}>{props.userData.username.split('@')[0]}</Title>
+                                <Caption style={styles.caption}>@{props.userData.username.split('@')[1]}</Caption>
                             </View>
                         </View>
                     </View>
@@ -63,7 +63,7 @@ export function DrawerContent(props) {
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
                                 <View pointerEvents='none'>
-                                    <Switch value={paperTheme.dark} />
+                                    <Switch value={1} />
                                 </View>
                             </View>
                         </TouchableRipple>
@@ -89,6 +89,8 @@ const styles = StyleSheet.create({
     },
     userInfoSection: {
         paddingLeft: 20,
+        borderTopColor: '#f4f4f4',
+        borderTopWidth: 1,
     },
     title: {
         fontSize: 16,
@@ -115,6 +117,8 @@ const styles = StyleSheet.create({
     },
     drawerSection: {
         marginTop: 15,
+        borderTopColor: '#f4f4f4',
+        borderTopWidth: 1,
     },
     bottomDrawerSection: {
         marginBottom: 15,

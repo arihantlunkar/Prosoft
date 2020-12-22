@@ -87,6 +87,7 @@ class SignInScreen extends Component {
                         if (text.trim().length != 0) {
                             Alert.alert('Wrong Input!', text, [{ text: 'Okay' }]);
                         } else {
+                            this.props.setUserDataCallback(data);
                             this.props.navigationCallback('Home');
                         }
                     });
