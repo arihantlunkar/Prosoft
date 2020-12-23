@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Avatar, Title, Caption, Drawer, TouchableRipple, useTheme, Text, Switch } from 'react-native-paper';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class DrawerContent extends React.Component {
     render() {
@@ -29,29 +29,36 @@ class DrawerContent extends React.Component {
 
                         <Drawer.Section style={styles.drawerSection}>
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='home-outline' color={color} size={size} />}
-                                label='Home'
+                                icon={({ color, size }) => <Icon name='home' color={color} size={size} />}
+                                label='   Home'
                                 onPress={() => {
-                                    this.props.navigation.navigate('MainTab');
+                                    this.props.navigation.navigate('HomeTab');
                                 }}
                             />
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='account' color={color} size={size} />}
-                                label='About Us'
+                                icon={({ color, size }) => <Icon name='shopping-cart' color={color} size={size} />}
+                                label='   Products'
+                                onPress={() => {
+                                    this.props.navigation.navigate('ProductListingTab');
+                                }}
+                            />
+                            <DrawerItem
+                                icon={({ color, size }) => <Icon name='user' color={color} size={size} />}
+                                label='     About Us'
                                 onPress={() => {
                                     this.props.navigation.navigate('AboutUs');
                                 }}
                             />
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='all-inclusive' color={color} size={size} />}
+                                icon={({ color, size }) => <Icon name='handshake-o' color={color} size={size} />}
                                 label='Clients'
                                 onPress={() => {
                                     this.props.navigation.navigate('Client');
                                 }}
                             />
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='outlook' color={color} size={size} />}
-                                label='Contact Us'
+                                icon={({ color, size }) => <Icon name='phone' color={color} size={size} />}
+                                label='     Contact Us'
                                 onPress={() => {
                                     this.props.navigation.navigate('ContactUs');
                                 }}
@@ -74,9 +81,10 @@ class DrawerContent extends React.Component {
                 </DrawerContentScrollView>
                 <Drawer.Section style={styles.bottomDrawerSection}>
                     <DrawerItem
-                        icon={({ color, size }) => <Icon name='exit-to-app' color={color} size={size} />}
+                        icon={({ color, size }) => <Icon name='sign-out' color={color} size={size} />}
                         label='Sign Out'
                         onPress={() => {
+                            this.props.navigation.closeDrawer();
                             this.props.navigationCallback('SignIn');
                         }}
                     />

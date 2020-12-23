@@ -10,7 +10,7 @@ class AboutUsScreen extends Component {
                 <ScrollView contentContainerStyle={styles.content}>
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={{ color: '#02b389', fontWeight: 'bold' }}>Vision</Title>
+                            <Title style={{ color: '#02b389' }}>Vision</Title>
                             <Paragraph>
                                 To apply ozone technology globally with industry experienced business associates. And to train human resources for successful implementation of environment friendly
                                 ozone technology for benefit of mankind.
@@ -19,7 +19,7 @@ class AboutUsScreen extends Component {
                     </Card>
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={{ color: '#02b389', fontWeight: 'bold' }}>Mission</Title>
+                            <Title style={{ color: '#02b389' }}>Mission</Title>
                             <Paragraph>
                                 {'\u2022' + ' '}To provide comprehensive plug & play integrated ozone system.
                                 {'\n'}
@@ -36,7 +36,7 @@ class AboutUsScreen extends Component {
                     </Card>
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={{ color: '#02b389', fontWeight: 'bold' }}>Offerings</Title>
+                            <Title style={{ color: '#02b389' }}>Offerings</Title>
                             <Paragraph>
                                 1. 100,000 man-hours experience in air, water & waste water treatment.
                                 {'\n'}
@@ -75,5 +75,13 @@ const styles = StyleSheet.create({
     },
     card: {
         margin: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
 });

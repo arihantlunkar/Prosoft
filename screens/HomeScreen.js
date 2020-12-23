@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { useTheme } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
 class HomeScreen extends Component {
     render() {
@@ -8,7 +9,9 @@ class HomeScreen extends Component {
         return (
             <View style={styles.container}>
                 <StatusBar backgroundColor='#02b389' barStyle={'light-content'} />
-                <Text style={{ color: theme.colors.text }}>Home Screen</Text>
+                <Animatable.View animation='fadeInUpBig' style={{ backgroundColor: theme.colors.background }}>
+                    <Text style={{ color: theme.colors.text }}>Home Screen</Text>
+                </Animatable.View>
             </View>
         );
     }

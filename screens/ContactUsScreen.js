@@ -10,7 +10,7 @@ class ContactUsScreen extends Component {
                 <ScrollView contentContainerStyle={styles.content}>
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={{ color: '#02b389', fontWeight: 'bold' }}>Contact</Title>
+                            <Title style={{ color: '#02b389' }}>Contact</Title>
                             <Paragraph>
                                 Mail : solution@chemtronicsindia.com
                                 {'\n'}
@@ -22,9 +22,9 @@ class ContactUsScreen extends Component {
                     </Card>
                     <Card style={styles.card}>
                         <Card.Content>
-                            <Title style={{ color: '#02b389', fontWeight: 'bold' }}>Head Office – Mumbai, India</Title>
+                            <Title style={{ color: '#02b389' }}>Head Office – Mumbai, India</Title>
                             <Paragraph>
-                                <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Corporate Office:</Text>
+                                <Text style={{ color: '#02b389' }}>Corporate Office:</Text>
                                 {'\n'}
                                 Station Road, Santacruz (West).
                                 {'\n'}
@@ -62,5 +62,13 @@ const styles = StyleSheet.create({
     },
     card: {
         margin: 4,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
 });

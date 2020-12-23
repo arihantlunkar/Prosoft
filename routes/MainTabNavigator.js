@@ -42,9 +42,10 @@ const ProductListingStackNavigator = ({ navigation }) => (
             headerTitleStyle: {},
         }}>
         <ProductListingStack.Screen
-            name='All Products'
+            name='ProductListing'
             component={ProductListingScreen}
             options={{
+                title: 'All Products',
                 headerLeft: () => <Icon.Button name='ios-menu' size={30} backgroundColor='#02b389' iconStyle={{ marginLeft: 15 }} onPress={() => navigation.openDrawer()} />,
             }}
         />
@@ -52,9 +53,9 @@ const ProductListingStackNavigator = ({ navigation }) => (
 );
 
 const MainTabNavigator = () => (
-    <Tab.Navigator initialRouteName='Home' activeColor='#fff' barStyle={{ backgroundColor: '#02b389' }}>
+    <Tab.Navigator initialRouteName='HomeTab' activeColor='#fff' barStyle={{ backgroundColor: '#02b389' }}>
         <Tab.Screen
-            name='Home'
+            name='HomeTab'
             component={HomeStackNavigator}
             options={{
                 tabBarLabel: 'Home',
@@ -63,12 +64,12 @@ const MainTabNavigator = () => (
             }}
         />
         <Tab.Screen
-            name='ProductListing'
+            name='ProductListingTab'
             component={ProductListingStackNavigator}
             options={{
                 tabBarLabel: 'Products',
                 tabBarColor: '#02b389',
-                tabBarIcon: ({ color }) => <Icon name='ios-git-compare' color={color} size={26} />,
+                tabBarIcon: ({ color }) => <Icon name='ios-cart' color={color} size={26} />,
             }}
         />
     </Tab.Navigator>
