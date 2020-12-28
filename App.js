@@ -10,7 +10,7 @@ import SplashScreen from './screens/SplashScreen';
 import AboutUsStackNavigator from './routes/AboutUsStackNavigator';
 import ContactUsStackNavigator from './routes/ContactUsStackNavigator';
 import ClientStackNavigator from './routes/ClientStackNavigator';
-import MainTabNavigator from './routes/MainTabNavigator';
+import HomeStackNavigator from './routes/HomeStackNavigator';
 
 class App extends React.Component {
     customDefaultTheme = {
@@ -21,6 +21,7 @@ class App extends React.Component {
             ...PaperDefaultTheme.colors,
             background: '#ffffff',
             text: '#333333',
+            primary: '#02b389',
         },
     };
 
@@ -32,6 +33,7 @@ class App extends React.Component {
             ...PaperDarkTheme.colors,
             background: '#333333',
             text: '#ffffff',
+            primary: '#02b389',
         },
     };
     constructor(props) {
@@ -81,7 +83,7 @@ class App extends React.Component {
                             drawerContent={(props) => (
                                 <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} username={this.state.username} />
                             )}>
-                            <Drawer.Screen name='MainTab' component={MainTabNavigator} />
+                            <Drawer.Screen name='Home' component={HomeStackNavigator} />
                             <Drawer.Screen name='AboutUs' component={AboutUsStackNavigator} />
                             <Drawer.Screen name='ContactUs' component={ContactUsStackNavigator} />
                             <Drawer.Screen name='Client' component={ClientStackNavigator} />
