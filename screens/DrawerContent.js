@@ -31,14 +31,7 @@ class DrawerContent extends React.Component {
                                 icon={({ color, size }) => <Icon name='home' color={color} size={size} />}
                                 label='   Home'
                                 onPress={() => {
-                                    this.props.navigation.navigate('HomeTab');
-                                }}
-                            />
-                            <DrawerItem
-                                icon={({ color, size }) => <Icon name='shopping-cart' color={color} size={size} />}
-                                label='   Products'
-                                onPress={() => {
-                                    this.props.navigation.navigate('ProductListingTab');
+                                    this.props.navigation.navigate('Home');
                                 }}
                             />
                             <DrawerItem
