@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { SafeAreaView, Text, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, StatusBar, Alert } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { TextInput, Button, Card } from 'react-native-paper';
+import { TextInput, Button, Card, Snackbar } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
 
 class HomeScreen extends Component {
@@ -24,7 +24,24 @@ class HomeScreen extends Component {
             purposeIndoorAirItems: purposeIndoorAirItems,
             purposeExhaustAirItems: purposeExhaustAirItems,
             airItems: purposeIndoorAirItems,
+            solution: 'Air',
+            type: 'Indoor Air Treatment',
+            purpose: purposeIndoorAirItems[0].value,
+            cfm: null,
+            isCFMValid: false,
+            invalidMsg: 'cfm cannot be empty.',
+            isSearchButtonClicked: false,
+            isProductFound: false,
         };
+    }
+    checkProductExistence() {
+        var params = this.state;
+        this.state.isProductFound = false;
+        if (params.purpose === 'STP Exhaust Odor Control' && params.cfm >= 1000 && params.cfm <= 50000) {
+            this.state.isProductFound = true;
+        } else if (params.purpose === 'OWC Exhaust Odor Control' && params.cfm >= 0 && params.cfm <= 12000) {
+            this.state.isProductFound = true;
+        }
     }
     render() {
         const { theme } = this.props;
@@ -40,7 +57,9 @@ class HomeScreen extends Component {
                                 defaultValue={'Air'}
                                 defaultIndex={0}
                                 containerStyle={{ height: 40 }}
-                                onChangeItem={(item) => console.log(item.label, item.value)}
+                                onChangeItem={(item) => {
+                                    this.setState({ solution: item.value });
+                                }}
                             />
                             <Text style={{ color: this.props.theme.colors.text }}>
                                 {'\n'}Type{'\n'}
@@ -50,7 +69,9 @@ class HomeScreen extends Component {
                                 defaultValue={'Indoor Air Treatment'}
                                 containerStyle={{ height: 40 }}
                                 onChangeItem={(item) => {
+                                    this.setState({ type: item.value });
                                     this.setState({ airItems: item.value === 'Indoor Air Treatment' ? this.state.purposeIndoorAirItems : this.state.purposeExhaustAirItems });
+                                    this.setState({ purpose: item.value === 'Indoor Air Treatment' ? this.state.purposeIndoorAirItems[0].value : this.state.purposeExhaustAirItems[0].value });
                                 }}
                             />
                             <Text style={{ color: this.props.theme.colors.text }}>
@@ -61,7 +82,9 @@ class HomeScreen extends Component {
                                 items={this.state.airItems}
                                 defaultValue={this.state.airItems[0].value}
                                 containerStyle={{ height: 40 }}
-                                onChangeItem={(item) => console.log(item.label, item.value)}
+                                onChangeItem={(item) => {
+                                    this.setState({ purpose: item.value });
+                                }}
                             />
                             <Text style={{ color: this.props.theme.colors.text }} />
                             <TextInput
@@ -69,7 +92,14 @@ class HomeScreen extends Component {
                                 label='Enter cfm'
                                 keyboardType='numeric'
                                 onChangeText={(text) => {
-                                    console.log(text);
+                                    let numreg = /^[0-9]+$/;
+                                    if (numreg.test(text)) {
+                                        this.setState({ cfm: text });
+                                        this.setState({ isCFMValid: true });
+                                    } else {
+                                        this.setState({ invalidMsg: 'Only positive integers allowed in cfm.' });
+                                        this.setState({ isCFMValid: false });
+                                    }
                                 }}
                             />
                             <Text style={{ color: this.props.theme.colors.text }} />
@@ -82,14 +112,39 @@ class HomeScreen extends Component {
                                 color='#02b389'
                                 style={{ height: 50, justifyContent: 'center', zIndex: 0 }}
                                 onPress={() => {
-                                    console.log('Pressed');
-                                    this.props.navigation.navigate('Client');
+                                    this.setState({ isSearchButtonClicked: true });
+                                    if (this.state.isCFMValid) {
+                                        this.checkProductExistence();
+                                        if (this.state.isProductFound) {
+                                            this.props.navigation.navigate('Result', {
+                                                solution: this.state.solution,
+                                                type: this.state.type,
+                                                purpose: this.state.purpose,
+                                                cfm: this.state.cfm,
+                                            });
+                                        } else {
+                                            this.setState({ invalidMsg: 'Did not find any product matching your requirement.' });
+                                        }
+                                    }
                                 }}>
                                 Search
                             </Button>
                         </Card.Content>
                     </Card>
                 </Animatable.View>
+                <Snackbar
+                    visible={this.state.isSearchButtonClicked && (!this.state.isCFMValid || !this.state.isProductFound)}
+                    onDismiss={() => {
+                        this.setState({ isSearchButtonClicked: false });
+                    }}
+                    action={{
+                        label: 'Ok',
+                        onPress: () => {
+                            this.setState({ isSearchButtonClicked: false });
+                        },
+                    }}>
+                    {this.state.invalidMsg}
+                </Snackbar>
             </SafeAreaView>
         );
     }
