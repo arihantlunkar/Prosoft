@@ -15,6 +15,8 @@ class ContactUsScreen extends Component {
                             <Paragraph>
                                 Mail : solution@chemtronicsindia.com
                                 {'\n'}
+                                Website : www.chemtronicsindia.com
+                                {'\n'}
                                 Sales Dept.: +91-22-2825 9933
                                 {'\n'}
                                 Mr. Sunil Shah : +91-93212 34527
@@ -25,7 +27,7 @@ class ContactUsScreen extends Component {
                         <Card.Content>
                             <Title style={{ color: '#02b389' }}>Head Office – Mumbai, India</Title>
                             <Paragraph>
-                                <Text style={{ color: '#02b389' }}>Corporate Office:</Text>
+                                <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Corporate Office:</Text>
                                 {'\n'}
                                 Station Road, Santacruz (West).
                                 {'\n'}
