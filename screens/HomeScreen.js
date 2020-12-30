@@ -116,6 +116,7 @@ class HomeScreen extends Component {
                                     <Text style={[styles.textStyle, { color: this.props.theme.colors.text, marginBottom: hp('2%') }]}>Let's start with the basic details.</Text>
                                     <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Solution</Text>
                                     <DropDownPicker
+                                        zIndex={5000}
                                         items={this.state.solutions}
                                         defaultValue={this.state.solutions[0]['value']}
                                         defaultIndex={0}
@@ -130,6 +131,7 @@ class HomeScreen extends Component {
                                     />
                                     <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Type</Text>
                                     <DropDownPicker
+                                        zIndex={4000}
                                         items={this.state.types}
                                         defaultValue={this.state.types[0].value}
                                         containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
@@ -143,6 +145,7 @@ class HomeScreen extends Component {
                                     />
                                     <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Purpose</Text>
                                     <DropDownPicker
+                                        zIndex={3000}
                                         items={this.state.purposes}
                                         defaultValue={this.state.purposes[0].value}
                                         itemStyle={{

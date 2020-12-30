@@ -28,29 +28,29 @@ class DrawerContent extends React.Component {
 
                         <Drawer.Section style={styles.drawerSection}>
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='home' color={color} size={size} />}
-                                label='   Home'
+                                icon={({ color, size }) => <Icon name='home' color={color} size={size} style={{ width: 30, height: 25 }} />}
+                                label='Home'
                                 onPress={() => {
                                     this.props.navigation.navigate('Home');
                                 }}
                             />
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='user' color={color} size={size} />}
-                                label='     About Us'
+                                icon={({ color, size }) => <Icon name='user' color={color} size={size} style={{ width: 30, height: 25 }} />}
+                                label='About Us'
                                 onPress={() => {
                                     this.props.navigation.navigate('AboutUs');
                                 }}
                             />
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='handshake-o' color={color} size={size} />}
+                                icon={({ color, size }) => <Icon name='handshake-o' color={color} size={size} style={{ width: 30, height: 25 }} />}
                                 label='Clients'
                                 onPress={() => {
                                     this.props.navigation.navigate('Client');
                                 }}
                             />
                             <DrawerItem
-                                icon={({ color, size }) => <Icon name='phone' color={color} size={size} />}
-                                label='     Contact Us'
+                                icon={({ color, size }) => <Icon name='phone' color={color} size={size} style={{ width: 30, height: 25 }} />}
+                                label='Contact Us'
                                 onPress={() => {
                                     this.props.navigation.navigate('ContactUs');
                                 }}
