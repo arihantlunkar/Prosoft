@@ -37,7 +37,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 15,
+        padding: 15,
+        backgroundColor: '#f4f4f4',
     },
     imageThumbnail: {
         height: 80,

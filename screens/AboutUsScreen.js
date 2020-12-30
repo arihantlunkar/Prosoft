@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 class AboutUsScreen extends Component {
     render() {
@@ -67,21 +68,14 @@ export default AboutUsScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#f4f4f4',
     },
     content: {
         padding: 4,
     },
     card: {
-        margin: 4,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 1,
+        borderRadius: 10,
+        margin: wp('1%'),
     },
 });

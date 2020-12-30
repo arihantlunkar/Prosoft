@@ -22,7 +22,7 @@ class HomeScreen extends Component {
             maxCFMValue: null,
             cfm: null,
             isCFMValid: false,
-            invalidMsg: 'cfm cannot be empty.',
+            invalidMsg: 'CFM cannot be empty.',
             isSearchButtonClicked: false,
             prosoftData: null,
             isProsoftDataAvailable: false,
@@ -166,7 +166,7 @@ class HomeScreen extends Component {
                                                 this.setState({ cfm: text });
                                                 this.setState({ isCFMValid: true });
                                             } else if (text.trim().length === 0) {
-                                                this.setState({ invalidMsg: 'cfm cannot be empty.' });
+                                                this.setState({ invalidMsg: 'CFM cannot be empty.' });
                                                 this.setState({ isCFMValid: false });
                                             } else {
                                                 this.setState({ invalidMsg: 'Only positive integers allowed in cfm.' });

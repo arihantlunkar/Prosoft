@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar, ScrollView } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 class ContactUsScreen extends Component {
     render() {
@@ -56,19 +57,16 @@ class ContactUsScreen extends Component {
 export default ContactUsScreen;
 
 const styles = StyleSheet.create({
-    container: {},
+    container: {
+        flex: 1,
+        backgroundColor: '#f4f4f4',
+    },
     content: {
         padding: 4,
     },
     card: {
-        margin: 4,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        elevation: 1,
+        borderRadius: 10,
+        margin: wp('1%'),
     },
 });

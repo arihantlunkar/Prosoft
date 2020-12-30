@@ -116,7 +116,7 @@ class ResultScreen extends Component {
                     </View>
                     {this.state.isSharingInProgress ? (
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ fontWeight: 'bold', marginTop: 20, marginBottom: 20 }}>Downloading. Please wait ... </Text>
+                            <Text style={{ marginTop: 20, marginBottom: 20 }}>Downloading. Please wait ... </Text>
                         </View>
                     ) : null}
                     <SinglePickerMaterialDialog
@@ -163,17 +163,6 @@ export default function(props) {
 
 const styles = StyleSheet.create({
     container: { margin: 20 },
-    card: {
-        margin: 4,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
     head: { height: 40, backgroundColor: '#02b389' },
     text: { margin: 6 },
 });
