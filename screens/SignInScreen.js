@@ -74,27 +74,17 @@ class SignInScreen extends Component {
         fetch('https://www.chemtronicsindia.in/includes/SessionController.php?session=login', {
             method: 'POST',
             body: JSON.stringify(data),
-        })
-            .then((response) => {
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.indexOf('application/json') !== -1) {
-                    return response.json().then((data) => {
-                        // process your JSON data further
-                    });
+        }).then((response) => {
+            return response.text().then((text) => {
+                if (text.trim().length != 0) {
+                    Alert.alert('Wrong Input!', text, [{ text: 'Okay' }]);
                 } else {
-                    return response.text().then((text) => {
-                        this.setState({ showLoader: false });
-                        if (text.trim().length != 0) {
-                            Alert.alert('Wrong Input!', text, [{ text: 'Okay' }]);
-                        } else {
-                            this.props.setUserNameCallback(this.state.email);
-                            this.props.navigationCallback('Home');
-                        }
-                    });
+                    this.setState({ showLoader: false });
+                    this.props.setUserNameCallback(this.state.email);
+                    this.props.navigationCallback('Home');
                 }
-            })
-            .then((responseJson) => {})
-            .catch((error) => {});
+            });
+        });
     }
 
     render() {

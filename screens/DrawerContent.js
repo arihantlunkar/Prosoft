@@ -56,7 +56,7 @@ class DrawerContent extends React.Component {
                                 }}
                             />
                         </Drawer.Section>
-                        <Drawer.Section title='Preferences'>
+                        {/* <Drawer.Section title='Preferences'>
                             <TouchableRipple
                                 onPress={() => {
                                     this.props.toggleThemeCallback();
@@ -68,7 +68,7 @@ class DrawerContent extends React.Component {
                                     </View>
                                 </View>
                             </TouchableRipple>
-                        </Drawer.Section>
+                        </Drawer.Section> */}
                     </View>
                 </DrawerContentScrollView>
                 <Drawer.Section style={styles.bottomDrawerSection}>

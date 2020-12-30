@@ -1,149 +1,209 @@
 import React, { Component } from 'react';
-import { SafeAreaView, Text, StyleSheet, StatusBar, ImageBackground, View, ScrollView } from 'react-native';
+import { Text, StyleSheet, StatusBar, ImageBackground, View, ScrollView, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TextInput, Button, Card, Snackbar } from 'react-native-paper';
-import * as Animatable from 'react-native-animatable';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+const PROSOFT_DATA_URL = 'https://www.chemtronicsindia.in/MobileApp/data.json';
+const HOME_SCREEN_BKG_URL = 'https://www.chemtronicsindia.in/assets/img/welcomeMsgBg.jpg';
 
 class HomeScreen extends Component {
     constructor(props) {
         super(props);
-        var purposeIndoorAirItems = [
-                { label: 'Enhance Work Place IAQ', value: 'Enhance Work Place IAQ' },
-                { label: 'Infection Control', value: 'Infection Control' },
-                { label: 'Air & Surface Disinfection', value: 'Air & Surface Disinfection' },
-                { label: 'Wash Room / Garbage Room', value: 'Wash Room / Garbage Room' },
-            ],
-            purposeExhaustAirItems = [
-                { label: 'STP Exhaust Odor Control', value: 'STP Exhaust Odor Control' },
-                { label: 'OWC Exhaust Odor Control', value: 'OWC Exhaust Odor Control' },
-                { label: 'Waste Processing Plant Odor Control', value: 'Waste Processing Plant Odor Control' },
-                { label: 'Kitchen Exhaust Oil & Odor Control', value: 'Kitchen Exhaust Oil & Odor Control' },
-            ];
         this.state = {
-            purposeIndoorAirItems: purposeIndoorAirItems,
-            purposeExhaustAirItems: purposeExhaustAirItems,
-            airItems: purposeExhaustAirItems,
-            solution: 'Air',
-            type: 'Exhaust Air Treatment',
-            purpose: purposeExhaustAirItems[0].value,
+            solutions: [],
+            selectedSolution: null,
+            types: [],
+            selectedType: null,
+            purposes: [],
+            selectedPurpose: null,
+            minCFMValue: null,
+            maxCFMValue: null,
             cfm: null,
             isCFMValid: false,
             invalidMsg: 'cfm cannot be empty.',
             isSearchButtonClicked: false,
-            isProductFound: false,
+            prosoftData: null,
+            isProsoftDataAvailable: false,
+            requiredResultData: null,
         };
+        this.getDataJSON();
     }
-    checkProductExistence() {
-        var params = this.state;
-        this.state.isProductFound = false;
-        if (params.purpose === 'STP Exhaust Odor Control' && params.cfm >= 1000 && params.cfm <= 50000) {
-            this.state.isProductFound = true;
-        } else if (params.purpose === 'OWC Exhaust Odor Control' && params.cfm >= 0 && params.cfm <= 12000) {
-            this.state.isProductFound = true;
-        }
+    getDataJSON() {
+        fetch(PROSOFT_DATA_URL, {}).then((response) => {
+            return response.json().then((data) => {
+                this.setState({ prosoftData: data });
+                this.getSolutions();
+                this.getTypes();
+                this.getPurposes();
+                this.getCFMRange();
+                this.setState({ isProsoftDataAvailable: true });
+            });
+        });
+    }
+    getSolutions() {
+        let solutions = [];
+        this.state.prosoftData.solutions.map((element) => {
+            solutions.push({
+                label: element.name,
+                value: element.name,
+                disabled: element.disabled,
+            });
+        });
+        this.setState({ solutions: solutions, selectedSolution: solutions[0]['value'] });
+    }
+    getTypes() {
+        let types = [];
+        const selectedSolution = this.state.prosoftData.solutions.filter((element) => element.name === this.state.selectedSolution);
+        selectedSolution[0].types.map((element) => {
+            types.push({
+                label: element.name,
+                value: element.name,
+                disabled: element.disabled,
+            });
+        });
+        this.setState({ types: types, selectedType: types[0]['value'] });
+    }
+    getPurposes() {
+        let purposes = [];
+        const selectedSolution = this.state.prosoftData.solutions.filter((element) => element.name === this.state.selectedSolution);
+        const selectedType = selectedSolution[0].types.filter((element) => element.name === this.state.selectedType);
+        selectedType[0].purposes.map((element) => {
+            purposes.push({
+                label: element.name,
+                value: element.name,
+                disabled: element.disabled,
+            });
+        });
+        this.setState({ purposes: purposes, selectedPurpose: purposes[0]['value'] });
+    }
+    getCFMRange() {
+        const selectedSolution = this.state.prosoftData.solutions.filter((element) => element.name === this.state.selectedSolution);
+        const selectedType = selectedSolution[0].types.filter((element) => element.name === this.state.selectedType);
+        const selectedPurpose = selectedType[0].purposes.filter((element) => element.name === this.state.selectedPurpose);
+        this.setState({ minCFMValue: selectedPurpose[0].min, maxCFMValue: selectedPurpose[0].max, requiredResultData: selectedPurpose });
+    }
+    isCFMWithinLimit() {
+        return this.state.cfm >= this.state.minCFMValue && this.state.cfm <= this.state.maxCFMValue;
     }
     render() {
         const { theme } = this.props;
         return (
-            <SafeAreaView style={styles.container}>
+            <View style={styles.container}>
                 <StatusBar backgroundColor='#02b389' barStyle={'light-content'} />
-                <ScrollView>
-                    <ImageBackground source={{ uri: 'https://www.chemtronicsindia.in/assets/img/welcomeMsgBg.jpg' }} style={styles.bgImg}>
-                        <View style={styles.overlay}>
-                            <Text style={styles.imgHeader}>Model Selection Guide</Text>
-                            <Text style={styles.textStyle}> The PROSOFT App will give you most appropriates model on the bases of your submitted data.</Text>
+                {!this.state.isProsoftDataAvailable ? (
+                    <View
+                        style={{
+                            flex: 1,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexDirection: 'row',
+                        }}>
+                        <ActivityIndicator size='large' color='#02b389' />
+                    </View>
+                ) : (
+                    <ScrollView>
+                        <ImageBackground source={{ uri: HOME_SCREEN_BKG_URL }} style={styles.bgImg}>
+                            <View style={styles.overlay}>
+                                <Text style={styles.imgHeader}>Model Selection Guide</Text>
+                                <Text style={styles.textStyle}> The PROSOFT App will give you most appropriates model on the bases of your submitted data.</Text>
+                            </View>
+                        </ImageBackground>
+                        <View style={[{ backgroundColor: theme.colors.background }, styles.cardParent]}>
+                            <Card style={styles.card}>
+                                <Card.Content>
+                                    <Text style={[styles.textStyle, { color: this.props.theme.colors.text, marginBottom: hp('2%') }]}>Let's start with the basic details.</Text>
+                                    <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Solution</Text>
+                                    <DropDownPicker
+                                        items={this.state.solutions}
+                                        defaultValue={this.state.solutions[0]['value']}
+                                        defaultIndex={0}
+                                        containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
+                                        itemStyle={{
+                                            justifyContent: 'flex-start',
+                                        }}
+                                        onChangeItem={(item) => {
+                                            this.state.selectedSolution = item.value;
+                                            this.getTypes();
+                                        }}
+                                    />
+                                    <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Type</Text>
+                                    <DropDownPicker
+                                        items={this.state.types}
+                                        defaultValue={this.state.types[0].value}
+                                        containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
+                                        itemStyle={{
+                                            justifyContent: 'flex-start',
+                                        }}
+                                        onChangeItem={(item) => {
+                                            this.state.selectedType = item.value;
+                                            this.getPurposes();
+                                        }}
+                                    />
+                                    <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Purpose</Text>
+                                    <DropDownPicker
+                                        items={this.state.purposes}
+                                        defaultValue={this.state.purposes[0].value}
+                                        itemStyle={{
+                                            justifyContent: 'flex-start',
+                                        }}
+                                        containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
+                                        onChangeItem={(item) => {
+                                            this.state.selectedPurpose = item.value;
+                                            this.getCFMRange();
+                                        }}
+                                        dropDownMaxHeight={hp('15%')}
+                                    />
+                                    <TextInput
+                                        mode='outlined'
+                                        label='Enter CFM'
+                                        keyboardType='numeric'
+                                        style={styles.textInput}
+                                        onChangeText={(text) => {
+                                            let numreg = /^[0-9]+$/;
+                                            if (numreg.test(text)) {
+                                                this.setState({ cfm: text });
+                                                this.setState({ isCFMValid: true });
+                                            } else if (text.trim().length === 0) {
+                                                this.setState({ invalidMsg: 'cfm cannot be empty.' });
+                                                this.setState({ isCFMValid: false });
+                                            } else {
+                                                this.setState({ invalidMsg: 'Only positive integers allowed in cfm.' });
+                                                this.setState({ isCFMValid: false });
+                                            }
+                                        }}
+                                    />
+                                </Card.Content>
+                            </Card>
                         </View>
-                    </ImageBackground>
-                    <Animatable.View animation='fadeInUpBig' style={[{ backgroundColor: theme.colors.background }, styles.cardParent]}>
-                        <Card style={styles.card}>
-                            <Card.Content>
-                                <Text style={[styles.textStyle, { color: this.props.theme.colors.text, marginBottom: hp('2%') }]}>Let's start with the basic details.</Text>
-                                <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Solution</Text>
-                                <DropDownPicker
-                                    items={[{ label: 'Air', value: 'Air' }]}
-                                    defaultValue={'Air'}
-                                    defaultIndex={0}
-                                    containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
-                                    itemStyle={{
-                                        justifyContent: 'flex-start',
-                                    }}
-                                    onChangeItem={(item) => {
-                                        this.setState({ solution: item.value });
-                                    }}
-                                />
-                                <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Type</Text>
-                                <DropDownPicker
-                                    items={[{ label: 'Indoor Air Treatment', value: 'Indoor Air Treatment' }, { label: 'Exhaust Air Treatment', value: 'Exhaust Air Treatment' }]}
-                                    defaultValue={'Exhaust Air Treatment'}
-                                    containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
-                                    itemStyle={{
-                                        justifyContent: 'flex-start',
-                                    }}
-                                    onChangeItem={(item) => {
-                                        this.setState({ type: item.value });
-                                        this.setState({ airItems: item.value === 'Indoor Air Treatment' ? this.state.purposeIndoorAirItems : this.state.purposeExhaustAirItems });
-                                        this.setState({ purpose: item.value === 'Indoor Air Treatment' ? this.state.purposeIndoorAirItems[0].value : this.state.purposeExhaustAirItems[0].value });
-                                    }}
-                                />
-                                <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Purpose</Text>
-                                <DropDownPicker
-                                    items={this.state.airItems}
-                                    defaultValue={this.state.airItems[0].value}
-                                    itemStyle={{
-                                        justifyContent: 'flex-start',
-                                    }}
-                                    containerStyle={{ height: hp('6%'), marginBottom: hp('2%') }}
-                                    onChangeItem={(item) => {
-                                        this.setState({ purpose: item.value });
-                                    }}
-                                    dropDownMaxHeight={hp('15%')}
-                                />
-                                <TextInput
-                                    mode='outlined'
-                                    label='Enter CFM'
-                                    keyboardType='numeric'
-                                    style={styles.textInput}
-                                    onChangeText={(text) => {
-                                        let numreg = /^[0-9]+$/;
-                                        if (numreg.test(text)) {
-                                            this.setState({ cfm: text });
-                                            this.setState({ isCFMValid: true });
-                                        } else {
-                                            this.setState({ invalidMsg: 'Only positive integers allowed in cfm.' });
-                                            this.setState({ isCFMValid: false });
-                                        }
-                                    }}
-                                />
-                            </Card.Content>
-                        </Card>
-                    </Animatable.View>
-                </ScrollView>
+                    </ScrollView>
+                )}
                 <Button
                     icon='database-search'
                     mode='contained'
                     style={styles.searchBtn}
+                    disabled={!this.state.isProsoftDataAvailable}
                     onPress={() => {
                         this.setState({ isSearchButtonClicked: true });
-                        if (this.state.isCFMValid) {
-                            this.checkProductExistence();
-                            if (this.state.isProductFound) {
-                                this.props.navigation.navigate('Result', {
-                                    solution: this.state.solution,
-                                    type: this.state.type,
-                                    purpose: this.state.purpose,
-                                    cfm: this.state.cfm,
-                                });
-                            } else {
-                                this.setState({ invalidMsg: 'Did not find any product matching your requirement.' });
-                            }
+                        if (!this.state.isCFMValid) return;
+                        if (!this.isCFMWithinLimit()) {
+                            this.setState({ invalidMsg: 'Did not find any product matching your requirement.' });
+                            return;
                         }
+                        this.setState({ isSearchButtonClicked: false });
+                        this.props.navigation.navigate('Result', {
+                            solution: this.state.selectedSolution,
+                            type: this.state.selectedType,
+                            purpose: this.state.selectedPurpose,
+                            cfm: this.state.cfm,
+                            requiredResultData: this.state.requiredResultData,
+                        });
                     }}>
                     Search
                 </Button>
                 <Snackbar
-                    visible={this.state.isSearchButtonClicked && (!this.state.isCFMValid || !this.state.isProductFound)}
+                    visible={this.state.isSearchButtonClicked && (!this.state.isCFMValid || !this.isCFMWithinLimit())}
                     onDismiss={() => {
                         this.setState({ isSearchButtonClicked: false });
                     }}
@@ -155,7 +215,7 @@ class HomeScreen extends Component {
                     }}>
                     {this.state.invalidMsg}
                 </Snackbar>
-            </SafeAreaView>
+            </View>
         );
     }
 }
