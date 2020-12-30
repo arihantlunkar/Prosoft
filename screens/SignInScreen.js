@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Platform, StyleSheet, StatusBar, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { useTheme } from 'react-native-paper';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import { TextInput, Card, Snackbar} from 'react-native-paper';
 
 class SignInScreen extends Component {
     constructor(props) {
@@ -19,6 +21,8 @@ class SignInScreen extends Component {
             isPasswordValid: false,
             hasUserStartedTypingPassword: false,
             showLoader: false,
+            isSignInBtnClicked: false,
+            invalidMsg: 'Email & password field cannot be empty.',
         };
     }
 
@@ -55,12 +59,12 @@ class SignInScreen extends Component {
 
     loginHandle(email, password) {
         if (this.state.email.length == 0 || this.state.password.length == 0) {
-            Alert.alert('Wrong Input!', 'Email or password field cannot be empty.', [{ text: 'Okay' }]);
+            this.setState({ invalidMsg: 'Email or password field cannot be empty.' });
             return;
         }
 
         if (!this.state.isEmailValid) {
-            Alert.alert('Wrong Input!', 'Email entered is not valid.', [{ text: 'Okay' }]);
+            this.setState({ invalidMsg: 'Email entered is not valid.' });
             return;
         }
 
@@ -85,7 +89,7 @@ class SignInScreen extends Component {
                     return response.text().then((text) => {
                         this.setState({ showLoader: false });
                         if (text.trim().length != 0) {
-                            Alert.alert('Wrong Input!', text, [{ text: 'Okay' }]);
+                            this.setState({ invalidMsg: text });
                         } else {
                             this.props.setUserNameCallback(this.state.email);
                             this.props.navigationCallback('Home');
@@ -100,106 +104,124 @@ class SignInScreen extends Component {
     render() {
         const { theme } = this.props;
         return (
-            <View style={styles.container}>
-                <StatusBar backgroundColor='#02b389' barStyle='light-content' />
+            <View style={[styles.container, { backgroundColor: theme.colors.primary }]}>
+                <StatusBar backgroundColor={theme.colors.primary} barStyle='light-content' />
                 <View style={styles.header}>
-                    <Text style={styles.text_header}>Welcome!</Text>
+                    <Text style={styles.textHeader}>Welcome To Chemtronics !</Text>
                 </View>
-                <Animatable.View animation='fadeInUpBig' style={[styles.footer, { backgroundColor: theme.colors.background }]}>
-                    <Text style={[styles.text_footer, { color: theme.colors.text }]}>Email</Text>
-                    <View style={styles.action}>
-                        <FontAwesome name='user-o' color={theme.colors.text} size={20} />
-                        <TextInput
-                            value={this.state.email}
-                            placeholder='Your Email'
-                            placeholderTextColor='#666666'
-                            style={[styles.textInput, { color: theme.colors.text }]}
-                            autoCapitalize='none'
-                            onChangeText={(val) => this.handleEmailChange(val)}
-                            onEndEditing={(e) => this.handleOnEndEditingEmail(e.nativeEvent.text)}
-                        />
-                        {this.state.isEmailValid ? (
-                            <Animatable.View animation='bounceIn'>
-                                <Feather name='check-circle' color='green' size={20} />
-                            </Animatable.View>
-                        ) : null}
-                    </View>
-                    {this.state.hasUserFinishedTypingEmail && !this.state.isEmailValid ? (
-                        <Animatable.View animation='fadeInLeft' duration={500}>
-                            <Text style={styles.errorMsg}>{this.state.invalidEmailMsg}</Text>
-                        </Animatable.View>
-                    ) : null}
+                <Animatable.View animation='fadeInUpBig' style={[{ backgroundColor: theme.colors.background }, styles.cardParent]}>
+                    <Card style={styles.card}>
+                        <Card.Content>
+                            <View style={styles.formGroup}>
+                                <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Email</Text>
+                                <TextInput
+                                    mode='outlined'
+                                    value={this.state.email}
+                                    label='Your Email'
+                                    left={<TextInput.Icon name={() => <FontAwesome name='user-o' color={theme.colors.text} size={16} />} />}
+                                    right={this.state.isEmailValid ? (
+                                        <TextInput.Icon name={() =>
+                                            <Animatable.View animation='bounceIn'>
+                                                <Feather name='check-circle' color='green' size={16} />
+                                            </Animatable.View>
+                                        }/>
+                                    ) : null}
+                                    onChangeText={(val) => this.handleEmailChange(val)}
+                                    onEndEditing={(e) => this.handleOnEndEditingEmail(e.nativeEvent.text)}
+                                /> 
+                                {this.state.hasUserFinishedTypingEmail && !this.state.isEmailValid ? (
+                                    <Animatable.View animation='fadeInLeft' duration={500}>
+                                        <Text style={styles.errorMsg}>{this.state.invalidEmailMsg}</Text>
+                                    </Animatable.View>
+                                ) : null}
+                            </View>
+                            <View style={styles.formGroup}>
+                                <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Password</Text>
+                                <TextInput
+                                    mode='outlined'
+                                    value={this.state.password}
+                                    label='Your Password'
+                                    secureTextEntry={this.state.secureTextEntry ? true : false}
+                                    left={<TextInput.Icon name={() => <Feather name='lock' color={theme.colors.text} size={16} />} />}
+                                    right={this.state.secureTextEntry ? (
+                                        <TextInput.Icon name={() =>
+                                            <Feather name='eye-off' color='grey' size={16} />
+                                        } onPress={() => {
+                                            this.updateSecureTextEntry();
+                                        }}/>
+                                    ) : <TextInput.Icon name={() =>
+                                            <Feather name='eye' color='grey' size={16} />
+                                        } onPress={() => {
+                                            this.updateSecureTextEntry();
+                                        }}/>
+                                    }                
+                                    autoCapitalize='none'
+                                    onChangeText={(val) => this.handlePasswordChange(val)}
+                                /> 
+                                {this.state.hasUserStartedTypingPassword && !this.state.isPasswordValid ? (
+                                    <Animatable.View animation='fadeInLeft' duration={500}>
+                                        <Text style={styles.errorMsg}>Password must not be empty.</Text>
+                                    </Animatable.View>
+                                ) : null}
+                            </View>
+                            {this.state.showLoader ? (
+                                <View
+                                    style={{
+                                        container: {
+                                            flex: 1,
+                                            justifyContent: 'center',
+                                        },
+                                        horizontal: {
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-around',
+                                            padding: 10,
+                                        },
+                                    }}>
+                                    <ActivityIndicator size='large' color={theme.colors.primary} />
+                                </View>
+                            ) : (
+                                <View style={styles.button}>
+                                    <TouchableOpacity
+                                        style={styles.signIn}
+                                        onPress={() => {
+                                            this.setState({ isSignInBtnClicked: true });
+                                            this.loginHandle(this.state.email, this.state.password);
+                                        }}>
+                                        <LinearGradient colors={['#08d4c4', '#01ab9d']} style={styles.signIn}>
+                                            <Text style={[styles.textSign, { color: '#ffffff' }]}>Sign In</Text>
+                                        </LinearGradient>
+                                    </TouchableOpacity>
 
-                    <Text style={[styles.text_footer, { color: theme.colors.text, marginTop: 35 }]}>Password</Text>
-                    <View style={styles.action}>
-                        <Feather name='lock' color={theme.colors.text} size={20} />
-                        <TextInput
-                            value={this.state.password}
-                            placeholder='Your Password'
-                            placeholderTextColor='#666666'
-                            secureTextEntry={this.state.secureTextEntry ? true : false}
-                            style={[styles.textInput, { color: theme.colors.text }]}
-                            autoCapitalize='none'
-                            onChangeText={(val) => this.handlePasswordChange(val)}
-                        />
-                        <TouchableOpacity
-                            onPress={() => {
-                                this.updateSecureTextEntry();
-                            }}>
-                            {this.state.secureTextEntry ? <Feather name='eye-off' color='grey' size={20} /> : <Feather name='eye' color='grey' size={20} />}
-                        </TouchableOpacity>
-                    </View>
-                    {this.state.hasUserStartedTypingPassword && !this.state.isPasswordValid ? (
-                        <Animatable.View animation='fadeInLeft' duration={500}>
-                            <Text style={styles.errorMsg}>Password must not be empty.</Text>
-                        </Animatable.View>
-                    ) : null}
-
-                    <TouchableOpacity>
-                        <Text style={{ color: '#02b389', marginTop: 15 }}>Forgot password?</Text>
-                    </TouchableOpacity>
-                    {this.state.showLoader ? (
-                        <View
-                            style={{
-                                container: {
-                                    flex: 1,
-                                    justifyContent: 'center',
-                                },
-                                horizontal: {
-                                    flexDirection: 'row',
-                                    justifyContent: 'space-around',
-                                    padding: 10,
-                                },
-                            }}>
-                            <ActivityIndicator size='large' color='#02b389' />
-                        </View>
-                    ) : (
-                        <View style={styles.button}>
-                            <TouchableOpacity
-                                style={styles.signIn}
-                                onPress={() => {
-                                    this.loginHandle(this.state.email, this.state.password);
-                                }}>
-                                <LinearGradient colors={['#08d4c4', '#01ab9d']} style={styles.signIn}>
-                                    <Text style={[styles.textSign, { color: '#ffffff' }]}>Sign In</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                onPress={() => this.props.navigationCallback('SignUp')}
-                                style={[
-                                    styles.signIn,
-                                    {
-                                        borderColor: '#02b389',
-                                        borderWidth: 1,
-                                        marginTop: 15,
-                                    },
-                                ]}>
-                                <Text style={[styles.textSign, { color: '#02b389' }]}>Sign Up</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
+                                    <TouchableOpacity
+                                        onPress={() => this.props.navigationCallback('SignUp')}
+                                        style={[
+                                            styles.signIn,
+                                            {
+                                                borderColor: theme.colors.primary,
+                                                borderWidth: 1,
+                                                marginTop: 15,
+                                            },
+                                        ]}>
+                                        <Text style={[styles.textSign, { color: theme.colors.primary }]}>Sign Up</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                        </Card.Content>
+                    </Card>
                 </Animatable.View>
+                <Snackbar
+                    visible={this.state.isSignInBtnClicked && (!this.state.isEmailValid || !this.state.isPasswordValid)}
+                    onDismiss={() => {
+                        this.setState({ isSignInBtnClicked: false });
+                    }}
+                    action={{
+                        label: 'Ok',
+                        onPress: () => {
+                            this.setState({ isSignInBtnClicked: false });
+                        },
+                    }}>
+                    {this.state.invalidMsg}
+                </Snackbar>
             </View>
         );
     }
@@ -212,51 +234,38 @@ export default function(props) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#02b389',
+        flex: 1
+    },
+    cardParent: {
+        flex: 3,
+        borderTopLeftRadius: hp('5%'),
+        borderTopRightRadius: hp('5%'),
+        paddingHorizontal: wp('3%'),
+        paddingVertical: 30,
+        backgroundColor: '#fff',
+    },
+    card: {
+        elevation: 0,
+        borderRadius: 0,
     },
     header: {
         flex: 1,
         justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50,
+        paddingHorizontal: hp('3%'),
+        paddingBottom: hp('5%'),
     },
-    footer: {
-        flex: 3,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingVertical: 30,
+    formGroup:{
+        marginBottom: hp('3%'),
     },
-    text_header: {
+    textHeader: {
         color: '#fff',
         fontWeight: 'bold',
-        fontSize: 30,
+        fontSize: wp('8%'),
     },
-    text_footer: {
-        color: '#05375a',
-        fontSize: 18,
-    },
-    action: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f2f2f2',
-        paddingBottom: 5,
-    },
-    actionError: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#FF0000',
-        paddingBottom: 5,
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: '#05375a',
+    labelStyle: {
+        fontSize: wp('3.5%'),
+        fontWeight: '700',
+        marginBottom: hp('0.1%'),
     },
     errorMsg: {
         color: '#FF0000',
@@ -264,14 +273,13 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 50,
     },
     signIn: {
         width: '100%',
-        height: 50,
+        height: hp('7%'),
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 10,
+        borderRadius: 5,
     },
     textSign: {
         fontSize: 18,
