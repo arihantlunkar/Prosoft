@@ -18,6 +18,18 @@ class AboutUsScreen extends Component {
                                 {'\n'}
                                 {'\n'}
                                 In this application one has to entre only one data input & instantly software processes on predefined design basses & optimum model is displayed.
+                                {'\n'}
+                                {'\n'}
+                                The software is suitable for selecting most appropriate models for Pharma, API, food & Beverage, dairy, bakery, aquaculture, hotels, resorts, hospital, health care, IT
+                                office, Banks & many more.
+                                {'\n'}
+                                {'\n'}
+                                Pl. contact us if you have any queries, we will be more than happy to assist you.
+                                {'\n'}
+                                {'\n'}
+                                Write to : solution@chemtronicsindia.com
+                                {'\n'}
+                                Call us : +91-932 123 4527
                             </Paragraph>
                         </Card.Content>
                     </Card>

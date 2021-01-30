@@ -35,11 +35,11 @@ class ContactUsScreen extends Component {
                                 {'\n'}
                                 {'\n'}
                                 <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Manufacturing / Warehouse:</Text>
-                                {'\n'}# 02, Thakur Complex, Valiv, Vasai (East),
+                                {'\n'}Unit No. 7, Ruby industrial estate,
                                 {'\n'}
-                                Near Chamundeshwari Industrial Estate, Thane.
+                                Navghar Road, Vasai East,
                                 {'\n'}
-                                Maharashtra INDIA {'\n'}
+                                Maharashtra 401208 {'\n'}
                                 {'\n'}
                                 <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Projects & Sales Office:</Text>
                                 {'\n'}28, Satyam Industrial Estate, Subhash Road,
