@@ -27,7 +27,7 @@ class ResultScreen extends Component {
 
     init() {
         const params = this.props.route.params;
-        const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max)[0];
+        const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
         let documentsList = [];
         for (var key in foundProduct.documents) {
             if (foundProduct.documents.hasOwnProperty(key)) {
@@ -47,7 +47,7 @@ class ResultScreen extends Component {
     openShareDialogAsync = async (val) => {
         try {
             const params = this.props.route.params;
-            const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max)[0];
+            const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
             var url = null;
             for (var key in foundProduct.documents) {
                 if (foundProduct.documents.hasOwnProperty(key) && key === val.label) {
@@ -74,7 +74,7 @@ class ResultScreen extends Component {
                 <View style={styles.container}>
                     <StatusBar backgroundColor='#02b389' barStyle={'light-content'} />
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <Chip mode='outlined' icon='cart' onPress={() => {}} style={{ marginBottom: 20, alignItems: 'center' }}>
+                        <Chip mode='outlined' icon='cart' onPress={() => { }} style={{ marginBottom: 20, alignItems: 'center' }}>
                             Product Found : <Text style={{ fontWeight: 'bold' }}>{this.state.productName}</Text>
                         </Chip>
                     </View>
@@ -116,7 +116,7 @@ class ResultScreen extends Component {
                     </View>
                     {this.state.isSharingInProgress ? (
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text style={{ marginTop: 20, marginBottom: 20 }}>Downloading. Please wait ... </Text>
+                            <Text style={{ marginTop: 20, marginBottom: 20 }}>Sharing. Please wait ... </Text>
                         </View>
                     ) : null}
                     <SinglePickerMaterialDialog
@@ -128,7 +128,7 @@ class ResultScreen extends Component {
                         onOk={(result) => {
                             this.setState({ isDownloadButtonClicked: false });
                             const params = this.props.route.params;
-                            const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max)[0];
+                            const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
                             var url = null;
                             for (var key in foundProduct.documents) {
                                 if (foundProduct.documents.hasOwnProperty(key) && key === result.selectedItem.label) {
@@ -156,7 +156,7 @@ class ResultScreen extends Component {
     }
 }
 
-export default function(props) {
+export default function (props) {
     const theme = useTheme();
     return <ResultScreen {...props} theme={theme} />;
 }

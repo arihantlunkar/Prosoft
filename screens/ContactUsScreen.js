@@ -13,40 +13,21 @@ class ContactUsScreen extends Component {
                         <Card.Content>
                             <Title style={{ color: '#02b389' }}>Contact</Title>
                             <Paragraph>
-                                Mail : solution@chemtronicsindia.com
+                                <Text style={{ fontWeight: 'bold' }}>Email :</Text>
                                 {'\n'}
-                                Website : www.chemtronicsindia.com
-                                {'\n'}
-                                Sales Dept.: +91-22-2825 9933
-                                {'\n'}
-                                Mr. Sunil Shah : +91-93212 34527
-                            </Paragraph>
-                        </Card.Content>
-                    </Card>
-                    <Card style={styles.card}>
-                        <Card.Content>
-                            <Title style={{ color: '#02b389' }}>Head Office – Mumbai, India</Title>
-                            <Paragraph>
-                                <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Corporate Office:</Text>
-                                {'\n'}
-                                Station Road, Santacruz (West).
-                                {'\n'}
-                                Mumbai 400 054. Maharashtra INDIA
+                                solution@chemtronicsindia.com
                                 {'\n'}
                                 {'\n'}
-                                <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Manufacturing / Warehouse:</Text>
-                                {'\n'}Unit No. 7, Ruby industrial estate,
+                                <Text style={{ fontWeight: 'bold' }}>Website :</Text>
                                 {'\n'}
-                                Navghar Road, Vasai East,
+                                www.chemtronicsindia.com
                                 {'\n'}
-                                Maharashtra 401208 {'\n'}
                                 {'\n'}
-                                <Text style={{ color: '#02b389', fontWeight: 'bold' }}>Projects & Sales Office:</Text>
-                                {'\n'}28, Satyam Industrial Estate, Subhash Road,
+                                <Text style={{ fontWeight: 'bold' }}>Contact No:</Text>
                                 {'\n'}
-                                Jogeshwari (East), Mumbai - 400 060.
+                                +91-932 123 4527
                                 {'\n'}
-                                Maharashtra INDIA
+                                +91-2825 9933
                             </Paragraph>
                         </Card.Content>
                     </Card>
