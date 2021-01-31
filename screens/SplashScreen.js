@@ -14,7 +14,7 @@ class SplashScreen extends Component {
             <View style={styles.container}>
                 <StatusBar backgroundColor='#02b389' barStyle='light-content' />
                 <View style={styles.header}>
-                    <Animatable.Image animation='bounceIn' duraton='1500' source={require('../assets/logo.png')} style={styles.logo} resizeMode='stretch' />
+                    <Animatable.Image animation='bounceIn' duraton='100' source={require('../assets/logo.png')} style={styles.logo} resizeMode='stretch' />
                 </View>
             </View>
         );
