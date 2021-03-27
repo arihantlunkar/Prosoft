@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, StatusBar, Linking } from 'react-native';
+import { View, Text, StyleSheet, StatusBar, Linking, Platform, Share } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Chip, Button } from 'react-native-paper';
 import { Table, Row, Rows } from 'react-native-table-component';
@@ -27,6 +27,7 @@ class ResultScreen extends Component {
 
     init() {
         const params = this.props.route.params;
+        console.log(params)
         const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
         let documentsList = [];
         for (var key in foundProduct.documents) {
@@ -44,29 +45,28 @@ class ResultScreen extends Component {
         this.state.tableData = params.requiredResultData[0].tableData;
     }
 
-    openShareDialogAsync = async (val) => {
-        try {
-            const params = this.props.route.params;
-            const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
-            var url = null;
-            for (var key in foundProduct.documents) {
-                if (foundProduct.documents.hasOwnProperty(key) && key === val.label) {
-                    url = foundProduct.documents[key];
-                }
+    onShare = async (val) => {
+        this.setState({ isSharingInProgress: true });
+        const params = this.props.route.params;
+        const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
+        var url = null;
+        for (var key in foundProduct.documents) {
+            if (foundProduct.documents.hasOwnProperty(key) && key === val.label) {
+                url = foundProduct.documents[key];
             }
-            const relativeFileName = val.label + ' (' + foundProduct.name + ').' + url.split('.').pop();
-            const downloadResumable = FileSystem.createDownloadResumable(url, FileSystem.documentDirectory + relativeFileName, {}, null);
-            const { uri } = await downloadResumable.downloadAsync();
-            if (!(await Sharing.isAvailableAsync())) {
-                alert(`Uh oh, sharing isn't available on your platform`);
-                return;
-            }
-            this.setState({ isSharingInProgress: false });
-            await Sharing.shareAsync(uri);
-        } catch (e) {
-            console.error(e);
         }
-    };
+        let relativeFileName = val.label + ' ' + foundProduct.name + '.' + url.split('.').pop();
+        relativeFileName = relativeFileName.replace(/\s+/g, '');
+        const { uri: localUri } = await FileSystem.downloadAsync(
+            url,
+            FileSystem.documentDirectory + relativeFileName
+        ).catch((error) => {
+            console.error(error)
+        })
+        await Sharing.shareAsync(localUri)
+            .catch((err) => console.log('Sharing::error', err))
+        this.setState({ isSharingInProgress: false });
+    }
 
     render() {
         return (
@@ -75,7 +75,7 @@ class ResultScreen extends Component {
                     <StatusBar backgroundColor='#02b389' barStyle={'light-content'} />
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                         <Chip mode='outlined' icon='cart' onPress={() => { }} style={{ marginBottom: 20, alignItems: 'center' }}>
-                            Product Found : <Text style={{ fontWeight: 'bold' }}>{this.state.productName}</Text>
+                            Product found for {this.props.route.params.cfm} {this.props.route.params.unit}: <Text style={{ fontWeight: 'bold' }}>{this.state.productName}</Text>
                         </Chip>
                     </View>
                     {this.state.tableData !== null ? (
@@ -145,9 +145,8 @@ class ResultScreen extends Component {
                         selectedItem={{ label: this.state.documentsList[0], value: 0 }}
                         onCancel={() => this.setState({ isShareButtonClicked: false })}
                         onOk={(result) => {
-                            this.setState({ isSharingInProgress: true });
                             this.setState({ isShareButtonClicked: false });
-                            this.openShareDialogAsync(result.selectedItem);
+                            this.onShare(result.selectedItem);
                         }}
                     />
                 </View>

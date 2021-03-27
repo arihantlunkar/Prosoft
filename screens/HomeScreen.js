@@ -80,6 +80,7 @@ class HomeScreen extends Component {
             });
         });
         this.setState({ purposes: purposes, selectedPurpose: purposes[0]['value'] });
+        this.state.selectedPurpose = purposes[0]['value']
     }
     getCFMRange() {
         const selectedSolution = this.state.prosoftData.solutions.filter((element) => element.name === this.state.selectedSolution);
@@ -164,6 +165,8 @@ class HomeScreen extends Component {
                                             onChangeItem={(item) => {
                                                 this.state.selectedType = item.value;
                                                 this.getPurposes();
+                                                this.getESP();
+                                                this.getCFMRange();
                                             }}
                                         />
                                         <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Purpose</Text>
@@ -242,7 +245,8 @@ class HomeScreen extends Component {
                             purpose: this.state.selectedPurpose,
                             cfm: this.state.cfm,
                             requiredResultData: this.state.requiredResultData,
-                            esp: this.state.selectedESP
+                            esp: this.state.selectedESP,
+                            unit: this.state.unit
                         });
                     }}>
                     Search
