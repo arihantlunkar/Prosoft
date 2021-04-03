@@ -89,8 +89,8 @@ class App extends React.Component {
                             <Drawer.Screen name='Client' component={ClientStackNavigator} />
                         </Drawer.Navigator>
                     ) : (
-                        <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
-                    )}
+                                    <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
+                                )}
                 </NavigationContainer>
             </PaperProvider>
         );

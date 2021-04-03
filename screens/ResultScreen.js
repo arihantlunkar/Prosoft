@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, StatusBar, Linking, Platform, Share } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import { Chip, Button } from 'react-native-paper';
+import { Chip, Button, Card } from 'react-native-paper';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SinglePickerMaterialDialog } from 'react-native-material-dialog';
@@ -27,7 +27,6 @@ class ResultScreen extends Component {
 
     init() {
         const params = this.props.route.params;
-        console.log(params)
         const foundProduct = params.requiredResultData[0].products.filter((element) => params.cfm >= element.min && params.cfm <= element.max && ((params.esp !== null && params.esp == element.ESP) || (params.esp === null)))[0];
         let documentsList = [];
         for (var key in foundProduct.documents) {
@@ -70,16 +69,25 @@ class ResultScreen extends Component {
 
     render() {
         return (
-            <ScrollView>
+            <ScrollView style={{ backgroundColor: '#f4f4f4' }}>
                 <View style={styles.container}>
                     <StatusBar backgroundColor='#02b389' barStyle={'light-content'} />
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                        <Chip mode='outlined' icon='cart' onPress={() => { }} style={{ marginBottom: 20, alignItems: 'center' }}>
-                            Product found for {this.props.route.params.cfm} {this.props.route.params.unit}: <Text style={{ fontWeight: 'bold' }}>{this.state.productName}</Text>
-                        </Chip>
-                    </View>
+                    <Card style={styles.card}>
+                        <Card.Content>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Chip selectedColor='#fff' mode='outlined' icon='cart' onPress={() => { }} textStyle={{ color: '#fff' }} style={{ marginBottom: 20, alignItems: 'center', backgroundColor: '#02b389' }}>
+                                    Product found : <Text style={{ fontWeight: 'bold' }}>{this.state.productName}</Text>
+                                </Chip>
+                            </View>
+                            <View>
+                                <Text><Text style={{ fontWeight: 'bold' }}>Type :</Text> {this.props.route.params.type}</Text>
+                                <Text><Text style={{ fontWeight: 'bold' }}>Purpose :</Text> {this.props.route.params.purpose}</Text>
+                                <Text><Text style={{ fontWeight: 'bold' }}>Value :</Text> {this.props.route.params.cfm} {this.props.route.params.unit}</Text>
+                            </View>
+                        </Card.Content>
+                    </Card>
                     {this.state.tableData !== null ? (
-                        <Table borderStyle={{ borderWidth: 2, borderColor: '#02b389' }}>
+                        <Table borderStyle={{ borderWidth: 2, borderColor: '#02b389' }} style={{ backgroundColor: '#fff', marginTop: 20 }}>
                             <Row data={this.state.tableHead} style={styles.head} textStyle={{ color: '#fff', margin: 6 }} />
                             <Rows data={this.state.tableData} textStyle={styles.text} />
                         </Table>
@@ -164,4 +172,8 @@ const styles = StyleSheet.create({
     container: { margin: 20 },
     head: { height: 40, backgroundColor: '#02b389' },
     text: { margin: 6 },
+    card: {
+        elevation: 1,
+        borderRadius: 10,
+    }
 });
