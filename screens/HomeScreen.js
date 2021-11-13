@@ -127,16 +127,17 @@ class HomeScreen extends Component {
                         <ActivityIndicator size='large' color='#02b389' />
                     </View>
                 ) : (
-                        <ScrollView>
-                            <ImageBackground source={{ uri: HOME_SCREEN_BKG_URL }} style={styles.bgImg}>
-                                <View style={styles.overlay}>
-                                    <Text style={styles.imgHeader}>Model Selection Guide</Text>
-                                    <Text style={styles.textStyle}> The PROSOFT App will give you most appropriates model on the bases of your submitted data.</Text>
-                                </View>
-                            </ImageBackground>
-                            <View style={[{ backgroundColor: theme.colors.background }, styles.cardParent]}>
-                                <Card style={styles.card}>
-                                    <Card.Content>
+                    <ScrollView>
+                        <ImageBackground source={{ uri: HOME_SCREEN_BKG_URL }} style={styles.bgImg}>
+                            <View style={styles.overlay}>
+                                <Text style={styles.imgHeader}>Model Selection Guide</Text>
+                                <Text style={styles.textStyle}> The PROSOFT App will give you most appropriates model on the bases of your submitted data.</Text>
+                            </View>
+                        </ImageBackground>
+                        <View style={[{ backgroundColor: theme.colors.background }, styles.cardParent]}>
+                            <Card style={styles.card}>
+                                <Card.Content>
+                                    <View style={{ zIndex: 2 }}>
                                         <Text style={[styles.textStyle, { color: this.props.theme.colors.text, marginBottom: hp('2%') }]}>Let's start with the basic details.</Text>
                                         <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Solution</Text>
                                         <DropDownPicker
@@ -202,6 +203,8 @@ class HomeScreen extends Component {
                                                     dropDownMaxHeight={hp('15%')}
                                                 /></View>
                                         ) : null}
+                                    </View>
+                                    <View style={{ zIndex: 1 }}>
                                         <TextInput
                                             mode='outlined'
                                             label={'Enter Value (in ' + this.state.unit + ')'}
@@ -221,11 +224,12 @@ class HomeScreen extends Component {
                                                 }
                                             }}
                                         />
-                                    </Card.Content>
-                                </Card>
-                            </View>
-                        </ScrollView>
-                    )}
+                                    </View>
+                                </Card.Content>
+                            </Card>
+                        </View>
+                    </ScrollView>
+                )}
                 <Button
                     icon='database-search'
                     mode='contained'
@@ -327,6 +331,8 @@ const styles = StyleSheet.create({
     textInput: {
         height: hp('6%'),
         borderColor: 'green',
+        zIndex: 1000,
+        elevation: 0
     },
     searchBtn: {
         height: hp('7%'),
