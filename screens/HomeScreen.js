@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, StatusBar, ImageBackground, View, ScrollView, ActivityIndicator } from 'react-native';
+import { Platform, Text, StyleSheet, StatusBar, ImageBackground, View, ScrollView, ActivityIndicator } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TextInput, Button, Card, Snackbar } from 'react-native-paper';
@@ -137,7 +137,7 @@ class HomeScreen extends Component {
                         <View style={[{ backgroundColor: theme.colors.background }, styles.cardParent]}>
                             <Card style={styles.card}>
                                 <Card.Content>
-                                    <View style={{ zIndex: 2 }}>
+                                    <View style={Platform.OS === 'ios' ? styles.zIndex2 : null}>
                                         <Text style={[styles.textStyle, { color: this.props.theme.colors.text, marginBottom: hp('2%') }]}>Let's start with the basic details.</Text>
                                         <Text style={[styles.labelStyle, { color: this.props.theme.colors.text }]}>Solution</Text>
                                         <DropDownPicker
@@ -204,7 +204,7 @@ class HomeScreen extends Component {
                                                 /></View>
                                         ) : null}
                                     </View>
-                                    <View style={{ zIndex: 1 }}>
+                                    <View style={Platform.OS === 'ios' ? styles.zIndex1 : null}>
                                         <TextInput
                                             mode='outlined'
                                             label={'Enter Value (in ' + this.state.unit + ')'}
@@ -343,4 +343,10 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         fontSize: wp('5%'),
     },
+    zIndex1: {
+        zIndex: 1
+    },
+    zIndex2: {
+        zIndex: 2
+    }
 });

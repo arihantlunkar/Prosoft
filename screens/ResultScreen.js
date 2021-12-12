@@ -75,7 +75,7 @@ class ResultScreen extends Component {
                     <Card style={styles.card}>
                         <Card.Content>
                             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                <Chip selectedColor='#fff' mode='outlined' icon='cart' onPress={() => { }} textStyle={{ color: '#fff' }} style={{ marginBottom: 20, alignItems: 'center', backgroundColor: '#02b389' }}>
+                                <Chip selectedColor='#fff' mode='outlined' icon='cart' onPress={() => { }} textStyle={{ color: '#fff' }} style={{ marginBottom: 20, backgroundColor: '#02b389' }}>
                                     Product found : <Text style={{ fontWeight: 'bold' }}>{this.state.productName}</Text>
                                 </Chip>
                             </View>
