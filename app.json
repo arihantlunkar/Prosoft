@@ -1,34 +1,32 @@
 {
-    "expo": {
-        "name": "Prosoft - Selection Guide",
-        "slug": "ProsoftSelectionGuide",
-        "version": "1.0.2",
-        "orientation": "portrait",
-        "icon": "./assets/icon.png",
-        "splash": {
-            "image": "./assets/fakebkg.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#02b389"
-        },
-        "updates": {
-            "fallbackToCacheTimeout": 0
-        },
-        "assetBundlePatterns": [
-            "**/*"
-        ],
-        "ios": {
-            "supportsTablet": true,
-            "bundleIdentifier": "com.prosoft.app1"
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#FFFFFF"
-            },
-            "package": "com.prosoft.app1"
-        },
-        "web": {
-            "favicon": "./assets/favicon.png"
-        }
+  "expo": {
+    "name": "Prosoft - Selection Guide",
+    "slug": "ProsoftSelectionGuide",
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/fakebkg.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#02b389"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.Prosoft"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.Prosoft"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     }
+  }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider as PaperProvider, DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } from 'react-native-paper';
 import { NavigationContainer, DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import DrawerContent from './screens/DrawerContent';
 import SignInScreen from './screens/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen';
@@ -22,19 +22,19 @@ class App extends React.Component {
             background: '#ffffff',
             text: '#333333',
             primary: '#02b389',
-        },
+        }
     };
 
     customDarkTheme = {
         ...NavigationDarkTheme,
         ...PaperDarkTheme,
-        colors: {
-            ...NavigationDarkTheme.colors,
-            ...PaperDarkTheme.colors,
-            background: '#333333',
-            text: '#ffffff',
-            primary: '#02b389',
-        },
+        // colors: {
+        //     ...NavigationDarkTheme.colors,
+        //     ...PaperDarkTheme.colors,
+        //     background: '#333333',
+        //     text: '#ffffff',
+        //     primary: '#02b389',
+        // }
     };
     constructor(props) {
         super(props);
@@ -79,18 +79,18 @@ class App extends React.Component {
                     ) : this.state.goToScreen === 'SignUp' ? (
                         <SignUpScreen navigationCallback={this.navigationCallback} />
                     ) : this.state.goToScreen === 'Home' && null !== this.state.username ? (
-                        <Drawer.Navigator
+                        <Drawer.Navigator initialRouteName="SignIn" useLegacyImplementation={true}
                             drawerContent={(props) => (
                                 <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} username={this.state.username} />
                             )}>
-                            <Drawer.Screen name='Home' component={HomeStackNavigator} />
-                            <Drawer.Screen name='AboutUs' component={AboutUsStackNavigator} />
-                            <Drawer.Screen name='ContactUs' component={ContactUsStackNavigator} />
-                            <Drawer.Screen name='Client' component={ClientStackNavigator} />
+                            <Drawer.Screen options={{ headerShown: false }} name='Home' component={HomeStackNavigator} />
+                            <Drawer.Screen options={{ headerShown: false }} name='AboutUs' component={AboutUsStackNavigator} />
+                            <Drawer.Screen options={{ headerShown: false }} name='ContactUs' component={ContactUsStackNavigator} />
+                            <Drawer.Screen options={{ headerShown: false }} name='Client' component={ClientStackNavigator} />
                         </Drawer.Navigator>
                     ) : (
-                                    <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
-                                )}
+                        <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
+                    )}
                 </NavigationContainer>
             </PaperProvider>
         );

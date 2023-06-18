@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 import { useTheme } from 'react-native-paper';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -112,11 +112,11 @@ class SignInScreen extends Component {
                                     mode='outlined'
                                     value={this.state.email}
                                     label='Your Email'
-                                    left={<TextInput.Icon name={() => <FontAwesome name='user-o' color={theme.colors.text} size={16} />} />}
+                                    left={<TextInput.Icon icon={() => <FontAwesome name='user' color={theme.colors.text} size={16} />} />}
                                     right={
                                         this.state.isEmailValid ? (
                                             <TextInput.Icon
-                                                name={() => (
+                                                icon={() => (
                                                     <Animatable.View animation='bounceIn'>
                                                         <Feather name='check-circle' color='green' size={16} />
                                                     </Animatable.View>
@@ -140,18 +140,18 @@ class SignInScreen extends Component {
                                     value={this.state.password}
                                     label='Your Password'
                                     secureTextEntry={this.state.secureTextEntry ? true : false}
-                                    left={<TextInput.Icon name={() => <Feather name='lock' color={theme.colors.text} size={16} />} />}
+                                    left={<TextInput.Icon icon={() => <Feather name='lock' color={theme.colors.text} size={16} />} />}
                                     right={
                                         this.state.secureTextEntry ? (
                                             <TextInput.Icon
-                                                name={() => <Feather name='eye-off' color='grey' size={16} />}
+                                                icon={() => <Feather name='eye-off' color='grey' size={16} />}
                                                 onPress={() => {
                                                     this.updateSecureTextEntry();
                                                 }}
                                             />
                                         ) : (
                                             <TextInput.Icon
-                                                name={() => <Feather name='eye' color='grey' size={16} />}
+                                                icon={() => <Feather name='eye' color='grey' size={16} />}
                                                 onPress={() => {
                                                     this.updateSecureTextEntry();
                                                 }}
