@@ -11,6 +11,7 @@ import AboutUsStackNavigator from './routes/AboutUsStackNavigator';
 import ContactUsStackNavigator from './routes/ContactUsStackNavigator';
 import ClientStackNavigator from './routes/ClientStackNavigator';
 import HomeStackNavigator from './routes/HomeStackNavigator';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 class App extends React.Component {
     customDefaultTheme = {
@@ -22,7 +23,7 @@ class App extends React.Component {
             background: '#ffffff',
             text: '#333333',
             primary: '#02b389',
-        }
+        },
     };
 
     customDarkTheme = {
@@ -36,6 +37,7 @@ class App extends React.Component {
         //     primary: '#02b389',
         // }
     };
+
     constructor(props) {
         super(props);
         this.navigationCallback = this.navigationCallback.bind(this);
@@ -48,6 +50,7 @@ class App extends React.Component {
             username: null,
         };
     }
+
     async navigationCallback(val) {
         if (val === 'SignInOrHome') {
             this.setState({ username: await AsyncStorage.getItem('username') });
@@ -73,25 +76,29 @@ class App extends React.Component {
         const Drawer = createDrawerNavigator();
         return (
             <PaperProvider theme={this.state.isDarkTheme ? this.customDarkTheme : this.customDefaultTheme}>
-                <NavigationContainer theme={this.state.isDarkTheme ? this.customDarkTheme : this.customDefaultTheme}>
-                    {this.state.goToScreen === 'Splash' ? (
-                        <SplashScreen navigationCallback={this.navigationCallback} />
-                    ) : this.state.goToScreen === 'SignUp' ? (
-                        <SignUpScreen navigationCallback={this.navigationCallback} />
-                    ) : this.state.goToScreen === 'Home' && null !== this.state.username ? (
-                        <Drawer.Navigator initialRouteName="SignIn" useLegacyImplementation={true}
-                            drawerContent={(props) => (
-                                <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} username={this.state.username} />
-                            )}>
-                            <Drawer.Screen options={{ headerShown: false }} name='Home' component={HomeStackNavigator} />
-                            <Drawer.Screen options={{ headerShown: false }} name='AboutUs' component={AboutUsStackNavigator} />
-                            <Drawer.Screen options={{ headerShown: false }} name='ContactUs' component={ContactUsStackNavigator} />
-                            <Drawer.Screen options={{ headerShown: false }} name='Client' component={ClientStackNavigator} />
-                        </Drawer.Navigator>
-                    ) : (
-                        <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
-                    )}
-                </NavigationContainer>
+                <SafeAreaProvider>
+                    <NavigationContainer theme={this.state.isDarkTheme ? this.customDarkTheme : this.customDefaultTheme}>
+                        {this.state.goToScreen === 'Splash' ? (
+                            <SplashScreen navigationCallback={this.navigationCallback} />
+                        ) : this.state.goToScreen === 'SignUp' ? (
+                            <SignUpScreen navigationCallback={this.navigationCallback} />
+                        ) : this.state.goToScreen === 'Home' && null !== this.state.username ? (
+                            <Drawer.Navigator
+                                initialRouteName='SignIn'
+                                useLegacyImplementation={true}
+                                drawerContent={(props) => (
+                                    <DrawerContent {...props} navigationCallback={this.navigationCallback} toggleThemeCallback={this.toggleThemeCallback} username={this.state.username} />
+                                )}>
+                                <Drawer.Screen options={{ headerShown: false }} name='Home' component={HomeStackNavigator} />
+                                <Drawer.Screen options={{ headerShown: false }} name='AboutUs' component={AboutUsStackNavigator} />
+                                <Drawer.Screen options={{ headerShown: false }} name='ContactUs' component={ContactUsStackNavigator} />
+                                <Drawer.Screen options={{ headerShown: false }} name='Client' component={ClientStackNavigator} />
+                            </Drawer.Navigator>
+                        ) : (
+                            <SignInScreen navigationCallback={this.navigationCallback} setUserNameCallback={this.setUserNameCallback} />
+                        )}
+                    </NavigationContainer>
+                </SafeAreaProvider>
             </PaperProvider>
         );
     }
